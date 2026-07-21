@@ -80,16 +80,22 @@ def retrieve(query: str, top_k: int = 2) -> list[str]:
     )
     ids = [hit["id"] for hit in results[0]]
     # 根据 id 取回原文
+    print("-----ids-----")
+    print(ids)
     rows = client_db.get(
         collection_name=COLLECTION_NAME,
         ids=ids,
         output_fields=["text"],
     )
+    print("----rows----")
+    print(rows)
     return [row["text"] for row in rows]
 
 # ─── 6. 生成回答 ───────────────────────────────────
 def ask(query: str) -> str:
     contexts = retrieve(query)
+    print("----context----")
+    print(contexts)
     prompt = f"""请根据以下参考信息回答问题。
 
 参考信息：
@@ -97,6 +103,9 @@ def ask(query: str) -> str:
 
 问题：{query}
 """
+    print("---参考-----")
+    print({chr(10).join(f"- {c}" for c in contexts)})
+    
     response = client_llm.chat.completions.create(
         model="kimi-for-coding",
         messages=[
