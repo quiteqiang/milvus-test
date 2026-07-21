@@ -24,7 +24,7 @@ COLLECTION_NAME = "rag_docs"
 # 预先获取一个 embedding，自动确定向量维度
 # 注意：当前端点对 embedding 模型名不敏感，实际使用默认模型
 _test_embedding = client_llm.embeddings.create(
-    model="kimi-embedding",
+    model="bge_m3_embed",
     input=["test"],
 ).data[0].embedding
 EMBEDDING_DIM = len(_test_embedding)
@@ -39,7 +39,7 @@ if COLLECTION_NAME not in client_db.list_collections():
 # ─── 3. 文本向量化函数 ────────────────────────
 def embed_texts(texts: list[str]) -> list[list[float]]:
     response = client_llm.embeddings.create(
-        model="kimi-embedding",  # 当前端点对模型名不敏感，实际使用默认 Embedding 模型
+        model="bge_m3_embed",  # 当前端点对模型名不敏感，实际使用默认 Embedding 模型
         input=texts,
     )
     return [item.embedding for item in response.data]
